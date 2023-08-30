@@ -101,13 +101,13 @@ class DBManager:
         )
         return self.cursor.fetchone()
 
-    def create_short_url(self, short_url: str, id_long: int):
+    def create_short_url(self, short_url: str, id_long_url: int):
         self.cursor.execute(
             """
             INSERT INTO short_url (long_url_id, url)
             VALUES (?, ?)
             """,
-            (short_url, id_long)
+            (short_url, id_long_url)
         )
         return
 
@@ -126,7 +126,6 @@ class DBManager:
 async def get_long_url(short_url: str):
     with DBManager() as db:
         long_url = db.get_long_by_short_url(short_url)
-        print(f'Я короткая {long_url}')
     return long_url
 
 
@@ -137,11 +136,10 @@ async def add_long_url(body: LongShortUrl) -> str:
     with DBManager() as db:
         if not db.get_long_url(long_url):
             db.create_long_url(long_url)
-            id_for_long = db.get_long_url_id(long_url)
+            id_long_url = db.get_long_url_id(long_url)
         else:
-            id_for_long = db.get_long_url_id(long_url)
-        if not short_url and not db.get_short_by_long_url(long_url):
+            id_long_url = db.get_long_url_id(long_url)
+        if not short_url or not db.get_short_by_long_url(long_url):
             short_url = shortuuid.random(length=5)
-            db.create_short_url(*id_for_long, short_url)
-        print(f'Я длинная {long_url}')
+            db.create_short_url(*id_long_url, short_url)
     return short_url
