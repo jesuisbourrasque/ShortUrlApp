@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from constants import DB_NAME
+from constants import CONNECTION_STRING
 from models import LongUrl, ShortUrl
 
 
 class DBManager:
     def __init__(self):
-        self.engine = create_engine(f"sqlite:///{DB_NAME}", echo=True)
+        self.engine = create_engine(CONNECTION_STRING)
         self.Session = None
         self.session = None
 

@@ -5,9 +5,10 @@ import shortuuid
 from fastapi import FastAPI
 from pydantic import BaseModel, HttpUrl
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from DBmanager import DBManager
-from constants import DB_NAME
+from constants import DB_NAME, CONNECTION_STRING
+from db_manager import DBManager
 from models import Base
 
 app = FastAPI()
@@ -16,7 +17,9 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     if not os.path.exists(DB_NAME):
-        engine = create_engine(f"sqlite:///{DB_NAME}", echo=True)
+        engine = create_engine(CONNECTION_STRING)
+        Session = sessionmaker(bind=engine)
+        session = Session()
         Base.metadata.create_all(engine)
 
 
