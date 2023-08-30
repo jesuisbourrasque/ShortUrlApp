@@ -125,7 +125,7 @@ class DBManager:
 async def get_long_url(short_url: str):
     with DBManager() as db:
         long_url = db.get_long_by_short_url(short_url)
-    return long_url
+    return long_url if long_url else "There is no long link referring to such a short one"
 
 
 @app.post("/")
