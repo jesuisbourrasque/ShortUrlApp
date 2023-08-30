@@ -1,13 +1,12 @@
 import os
-import sqlite3
-from typing import Optional
-
 import shortuuid
+import sqlite3
+from constants import DB_NAME
 from fastapi import FastAPI
 from pydantic import BaseModel, HttpUrl
+from typing import Optional
 
 app = FastAPI()
-DB_NAME = "db.sql"
 
 
 @app.on_event("startup")
@@ -126,7 +125,6 @@ class DBManager:
 async def get_long_url(short_url: str):
     with DBManager() as db:
         long_url = db.get_long_by_short_url(short_url)
-        print(f'Я короткая {long_url}')
     return long_url
 
 
@@ -143,5 +141,4 @@ async def add_long_url(body: LongShortUrl) -> str:
         if not short_url and not db.get_short_by_long_url(long_url):
             short_url = shortuuid.random(length=5)
             db.create_short_url(*id_for_long, short_url)
-        print(f'Я длинная {long_url}')
     return short_url
