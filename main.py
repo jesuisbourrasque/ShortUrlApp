@@ -19,7 +19,7 @@ async def startup_event():
             """
             CREATE TABLE long_url (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                url TEXT
+                url TEXT NOT NULL UNIQUE
             )
             """
         )
@@ -27,8 +27,8 @@ async def startup_event():
             """
             CREATE TABLE short_url (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                long_url_id INTEGER,
-                url TEXT,
+                long_url_id INTEGER NOT NULL,
+                url TEXT NOT NULL UNIQUE,
                 FOREIGN KEY(long_url_id) REFERENCES long_url(id)
             )
             """
