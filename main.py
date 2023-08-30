@@ -6,8 +6,9 @@ import shortuuid
 from fastapi import FastAPI
 from pydantic import BaseModel, HttpUrl
 
+from constants import DB_NAME
+
 app = FastAPI()
-DB_NAME = "db.sql"
 
 
 @app.on_event("startup")
